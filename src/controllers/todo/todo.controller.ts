@@ -3,7 +3,7 @@ import { Request, Response } from "express";
 // TODO:
 // 1. create a GET method and route to get all the todo list ✅
 // 2. create a GET method to get a single todo value from our list ✅
-// 3. create a DELETE method to remove a todo field from the todo list
+// 3. create a DELETE method to remove a todo field from the todo list ✅
 // 4. create a PATCH method to remove a todo field from the todo list
 // 5. update the createTodo method in the TodoController
 
@@ -58,7 +58,7 @@ export class TodoController {
 		};
 	}
 
-	getSingleTodo(req: Request, res: Response) {
+	getSingleTodo(req: Request, _res: Response) {
 		// get params
 		const { id } = req.params;
 		const numberedId = Number(id);
@@ -70,6 +70,32 @@ export class TodoController {
 		return {
 			message: todo.length > 0 ? "todo found" : "check the id passed",
 			data: todo[0],
+		};
+	}
+
+	deleteSingleTodo(req: Request, res: Response) {
+		const { id } = req.params;
+		const numberedId = Number(id);
+
+		// logic to delete from database
+
+		const todo = this.todoList.find((todo) => {
+			return todo.id === numberedId;
+		});
+
+		if (!todo) {
+			return {
+				message: `couldn't find todo with id: ${id}`,
+			};
+		}
+
+		const updatedTodo = this.todoList.filter((todo) => {
+			return todo.id != numberedId;
+		});
+
+		return {
+			message: "todo deleted",
+			data: updatedTodo,
 		};
 	}
 }

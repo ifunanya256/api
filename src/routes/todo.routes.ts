@@ -18,4 +18,6 @@ router.get("/", todoController.getAllTodo.bind(todoController));
 
 router.get("/:id", todoController.getSingleTodo.bind(todoController));
 
+router.delete("/:id", todoController.deleteSingleTodo.bind(todoController));
+
 export default router;
