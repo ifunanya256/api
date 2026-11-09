@@ -1,6 +1,6 @@
 import { createRouter } from "../utils/router";
 import { TodoController } from "../controllers/todo/todo.controller";
-import { createTodoDto } from "../dto";
+import { createTodoDto, updateTodoDto } from "../dto";
 import { validateBody } from "../middleware/validation.middleware";
 
 // const router = Router()
@@ -19,5 +19,11 @@ router.get("/", todoController.getAllTodo.bind(todoController));
 router.get("/:id", todoController.getSingleTodo.bind(todoController));
 
 router.delete("/:id", todoController.deleteSingleTodo.bind(todoController));
+
+router.patch(
+	"/:id",
+	validateBody(updateTodoDto),
+	todoController.updateSingleTodo.bind(todoController),
+);
 
 export default router;

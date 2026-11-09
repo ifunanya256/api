@@ -1,10 +1,11 @@
 import { Request, Response } from "express";
+import { UpdateTodoDto } from "../../dto";
 
 // TODO:
 // 1. create a GET method and route to get all the todo list ✅
 // 2. create a GET method to get a single todo value from our list ✅
 // 3. create a DELETE method to remove a todo field from the todo list ✅
-// 4. create a PATCH method to remove a todo field from the todo list
+// 4. create a PATCH method to remove a todo field from the todo list ✅
 // 5. update the createTodo method in the TodoController
 
 interface Todo {
@@ -73,7 +74,7 @@ export class TodoController {
 		};
 	}
 
-	deleteSingleTodo(req: Request, res: Response) {
+	deleteSingleTodo(req: Request, _res: Response) {
 		const { id } = req.params;
 		const numberedId = Number(id);
 
@@ -96,6 +97,44 @@ export class TodoController {
 		return {
 			message: "todo deleted",
 			data: updatedTodo,
+		};
+	}
+
+	updateSingleTodo(req: Request, _res: Response) {
+		const { id } = req.params;
+		const numberedId = Number(id);
+
+		const reqBody = req.body as UpdateTodoDto;
+
+		const todo = this.todoList.find((todo) => {
+			return todo.id === numberedId;
+		});
+
+		if (!todo) {
+			return {
+				message: `couldn't find todo with id: ${id}`,
+			};
+		}
+
+		if (reqBody.comment) {
+			todo.comment = reqBody.comment;
+		}
+
+		if (reqBody.name) {
+			todo.name = reqBody.name;
+		}
+
+		if (reqBody.description) {
+			todo.description = reqBody.description;
+		}
+
+		if (reqBody.isCompleted != undefined) {
+			todo.isCompleted = reqBody.isCompleted;
+		}
+
+		return {
+			message: "update completed",
+			data: todo,
 		};
 	}
 }
