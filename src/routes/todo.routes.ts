@@ -14,4 +14,8 @@ router.post(
   todoController.createTodo.bind(todoController),
 );
 
+router.get("/", todoController.getAllToDo.bind(todoController))
+router.get("/:id", todoController.getSingleToDo.bind(todoController))
+
+
 export default router;
