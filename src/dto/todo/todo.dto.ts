@@ -6,7 +6,7 @@ export const createTodoDto = z.object({
 		.min(1, "Title is required")
 		.max(255, "Title must not be more than 255 words"),
 	description: z.string().min(1, "Description is required"),
-	isCompleted: z.boolean().default(false),
+	isCompleted: z.boolean().optional().default(false),
 });
 
 export type CreateTodoDTO = z.infer<typeof createTodoDto>;
