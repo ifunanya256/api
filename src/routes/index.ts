@@ -5,7 +5,7 @@ import todoRoutes from "./todo.routes";
 
 const router = Router();
 
-router.get("/healthz", healthCheck);
+router.get("/health", healthCheck);
 
 router.use("/auth", authRoutes);
 router.use("/todo", todoRoutes);
