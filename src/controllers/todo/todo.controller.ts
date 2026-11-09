@@ -54,4 +54,26 @@ export class TodoController {
       data: todo[0],
     };
   }
+
+  deleteSingleToDo(req: Request, res: Response) {
+    const { id } = req.params;
+    const numberedId = Number(id);
+
+    const todo = this.todoList.find((todo) => {
+      return todo.id === numberedId;
+    });
+
+    if (!todo) {
+      return {
+        message: `Couldn't find todo with id: ${id}`,
+      };
+    }
+	
+	const updatedTodo = this.todoList.filter((todo) => {
+		return todo.id != numberedId;
+
+	})
+
+	return updatedTodo
+}
 }
