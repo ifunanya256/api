@@ -1,4 +1,5 @@
 import { Request, Response } from "express";
+import { UpdateToDoDto } from "../../dto";
 
 interface Todo {
   id: number;
@@ -68,12 +69,49 @@ export class TodoController {
         message: `Couldn't find todo with id: ${id}`,
       };
     }
-	
-	const updatedTodo = this.todoList.filter((todo) => {
-		return todo.id != numberedId;
 
-	})
+    const updatedTodo = this.todoList.filter((todo) => {
+      return todo.id != numberedId;
+    });
 
-	return updatedTodo
-}
+    return updatedTodo;
+  }
+
+  updateSingleToDo(req: Request, res: Response) {
+    const { id } = req.params;
+    const numberedId = Number(id);
+
+    const reqBody = req.body as UpdateToDoDto;
+
+    const todo = this.todoList.find((todo) => {
+      return todo.id === numberedId;
+    });
+
+    if (!todo) {
+      return {
+        message: `couldn't find todo with id: ${id}`,
+      };
+    }
+
+    if (reqBody.comment) {
+      todo.comment = reqBody.comment;
+    }
+
+    if (reqBody.name) {
+      todo.name = reqBody.name;
+    }
+
+    if (reqBody.description) {
+      todo.description = reqBody.description;
+    }
+
+    if (reqBody.isCompleted != undefined) {
+      todo.isCompleted = reqBody.isCompleted;
+    }
+
+    return {
+      message: "Update completed",
+      data: todo,
+    };
+  }
 }
