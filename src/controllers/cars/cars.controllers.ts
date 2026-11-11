@@ -1,5 +1,5 @@
 import { Request, Response } from "express";
-import { UpdateToDoDto } from "../../dto";
+import { UpdateCarsDto, updateCarsDto} from "../../dto/cars/cars.dto"; 
 
 interface Cars {
   id: number;
@@ -56,8 +56,7 @@ export class CarsController {
     },
   ];
 
-   createCars(req: Request, res: Response) {}
-
+  createCars(req: Request, res: Response) {}
 
   getAllCars(req: Request, res: Response) {
     const total = this.carsList.length;
@@ -68,27 +67,86 @@ export class CarsController {
     };
   }
 
+  getSingleCars(req: Request, res: Response) {
+    const { id } = req.params;
+    const numberId = Number(id);
 
-  getSingleCars(req: Request, res:Response) {
-    const { id } = req.params
-    const numberId = Number(id)
+    const Cars = this.carsList.filter((cars) => cars.id === numberId);
 
-    const Cars = this.carsList.filter((cars) => cars.id === numberId)
-
-    return{
-        message: Cars.length > 0 ? "Car found" : "Car not found",
-        data: Cars[0]
-    }
+    return {
+      message: Cars.length > 0 ? "Car found" : "Car not found",
+      data: Cars[0],
+    };
   }
 
   deleteSingleCars(req: Request, res: Response) {
-    const { id } = req.params
-    const numberedId = Number(id)
+    const { id } = req.params;
+    const numberedId = Number(id);
 
     const Cars = this.carsList.find((cars) => {
-        return cars.id === numberedId
-    })
+      return cars.id === numberedId;
+    });
+
+    if (!Cars) {
+      return {
+        message: `Couldn't find car with id: ${id}`,
+      };
+    }
+
+    const updatedCars = this.carsList.filter((cars) => {
+      return cars.id != numberedId;
+    });
+
+    return updatedCars;
   }
 
+  updateSingleCars(req: Request, res: Response) {
+    const { id } = req.params;
+    const numberedId = Number(id);
 
+    const reqBody = req.body as UpdateCarsDto
+
+    const cars = this.carsList.find((cars) => {
+      return cars.id === numberedId;
+    });
+
+    if (!cars) {
+      return {
+        message: `couldn't find car with id: ${id}`,
+      };
+    }
+
+    if (reqBody.brand) {
+      cars.brand = reqBody.brand;
+    }
+
+    if (reqBody.model) {
+      cars.model = reqBody.model;
+    }
+
+    if (reqBody.year) {
+      cars.year = reqBody.year;
+    }
+
+    if (reqBody.isAvailable != undefined) {
+      cars.isAvailable = reqBody.isAvailable;
+    }
+
+    if (reqBody.color) {
+      cars.color = reqBody.color;
+    }
+
+    if (reqBody.price) {
+      cars.price = reqBody.price;
+    }
+
+    if (reqBody.description) {
+      cars.description = reqBody.description;
+    }
+
+    return {
+      message: "Update completed",
+      data: cars,
+    };
+  }
 }
