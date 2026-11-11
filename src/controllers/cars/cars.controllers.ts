@@ -71,14 +71,24 @@ export class CarsController {
 
   getSingleCars(req: Request, res:Response) {
     const { id } = req.params
-    const numberedId = Number(id)
+    const numberId = Number(id)
 
-    const Cars = this.carsList.filter((cars) => cars.id === numberedId)
+    const Cars = this.carsList.filter((cars) => cars.id === numberId)
 
     return{
         message: Cars.length > 0 ? "Car found" : "Car not found",
         data: Cars[0]
     }
   }
+
+  deleteSingleCars(req: Request, res: Response) {
+    const { id } = req.params
+    const numberedId = Number(id)
+
+    const Cars = this.carsList.find((cars) => {
+        return cars.id === numberedId
+    })
+  }
+
 
 }

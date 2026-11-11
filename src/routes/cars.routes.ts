@@ -15,5 +15,6 @@ router.post(
 
 router.get("/", carsController.getAllCars.bind(carsController));
 router.get("/", carsController.getSingleCars.bind(carsController))
+router.delete("/", carsController.deleteSingleCars.bind(carsController))
 
 export default router;
