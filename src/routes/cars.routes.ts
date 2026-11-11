@@ -13,4 +13,7 @@ router.post(
   carsController.createCars.bind(carsController),
 );
 
+router.get("/", carsController.getAllCars.bind(carsController));
+router.get("/", carsController.getSingleCars.bind(carsController))
+
 export default router;

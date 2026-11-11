@@ -58,27 +58,27 @@ export class CarsController {
 
    createCars(req: Request, res: Response) {}
 
+
+  getAllCars(req: Request, res: Response) {
+    const total = this.carsList.length;
+
+    return {
+      total,
+      data: this.carsList,
+    };
+  }
+
+
+  getSingleCars(req: Request, res:Response) {
+    const { id } = req.params
+    const numberedId = Number(id)
+
+    const Cars = this.carsList.filter((cars) => cars.id === numberedId)
+
+    return{
+        message: Cars.length > 0 ? "Car found" : "Car not found",
+        data: Cars[0]
+    }
+  }
+
 }
-
-//   getAllCars(req: Request, res: Response) {
-//     const total = this.carsList.length;
-
-//     return {
-//       total,
-//       data: this.carsList,
-//     };
-//   }
-
-//   getSingleCars(req: Request, res:Response) {
-//     const { id } = req.params
-//     const numberedId = Number(id)
-
-//     const Cars = this.carsList.filter((cars) => cars.id === numberedId)
-
-//     return{
-//         message: Cars.length > 0 ? "Car found" : "Car not found",
-//         data: Cars[0]
-//     }
-//   }
-
-// }
