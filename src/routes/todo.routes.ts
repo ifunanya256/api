@@ -15,11 +15,11 @@ router.post(
 
 router.get("/", todoController.getAllToDo.bind(todoController));
 router.get("/:id", todoController.getSingleToDo.bind(todoController));
-router.delete("/:id", todoController.deleteSingleToDo.bind(todoController));
-router.patch(
-  "/:id",
-  validateBody(updateToDoDto),
-  todoController.updateSingleToDo.bind(todoController),
-);
+// router.delete("/:id", todoController.deleteSingleToDo.bind(todoController));
+// router.patch(
+//   "/:id",
+//   validateBody(updateToDoDto),
+//   todoController.updateSingleToDo.bind(todoController),
+// );
 
 export default router;

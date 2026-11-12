@@ -15,12 +15,12 @@ router.post(
 );
 
 router.get("/", carsController.getAllCars.bind(carsController));
-router.get("/single/:id", carsController.getSingleCars.bind(carsController));
-router.delete("/:id", carsController.deleteSingleCars.bind(carsController));
-router.patch(
-  "/:id",
-  validateBody(updateCarsDto),
-  carsController.updateSingleCars.bind(carsController),
-);
+router.get("/single/:id", carsController.getSingleCar.bind(carsController));
+// router.delete("/:id", carsController.deleteSingleCars.bind(carsController));
+// router.patch(
+//   "/:id",
+//   validateBody(updateCarsDto),
+//   carsController.updateSingleCars.bind(carsController),
+// );
 
 export default router;

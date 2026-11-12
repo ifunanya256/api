@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { CreateTodoDTO, UpdateToDoDto } from "../../dto";
 import { todoTable } from "../../db/schema";
 import { db } from "../../config/db";
-import { todo } from "node:test";
+import { count, eq } from "drizzle-orm";
 
 interface Todo {
   id: number;
@@ -13,29 +13,6 @@ interface Todo {
 }
 
 export class TodoController {
-  private todoList: Todo[] = [
-    {
-      id: 1,
-      name: "Go to the market",
-      description: "Buy the needful things missing",
-      isCompleted: false,
-    },
-    {
-      id: 2,
-      name: "Wash the dirty cloths",
-      description: "Place the cloths in the washing machine",
-      isCompleted: true,
-      comment: "I was able to wash all the cloths ",
-    },
-    {
-      id: 3,
-      name: "Prepare food",
-      description: "Get the food ready before 3",
-      isCompleted: true,
-      comment: "It tasted so sweet",
-    },
-  ];
-
   async createTodo(req: Request, res: Response) {
     const requestBody = req.body as CreateTodoDTO;
 
@@ -53,83 +30,29 @@ export class TodoController {
     };
   }
 
-  getAllToDo(req: Request, res: Response) {
-    const total = this.todoList.length;
+  async getAllToDo(req: Request, res: Response) {
+    const todos = await db.select().from(todoTable);
+    const total = await db.select({ count: count() }).from(todoTable);
 
     return {
-      total,
-      data: this.todoList,
+      message: "response successful",
+      data: todos,
+      total: total[0].count,
     };
   }
 
-  getSingleToDo(req: Request, res: Response) {
+  async getSingleToDo(req: Request, res: Response) {
     const { id } = req.params;
     const numberId = Number(id);
 
-    const todo = this.todoList.filter((todo) => todo.id === numberId);
+    const todo = await db
+      .select()
+      .from(todoTable)
+      .where(eq(todoTable.id, numberId));
 
     return {
-      message: todo.length > 0 ? "todo found" : "check the id passed",
+      message: `todo for id:${id} retrieved`,
       data: todo[0],
-    };
-  }
-
-  deleteSingleToDo(req: Request, res: Response) {
-    const { id } = req.params;
-    const numberedId = Number(id);
-
-    const todo = this.todoList.find((todo) => {
-      return todo.id === numberedId;
-    });
-
-    if (!todo) {
-      return {
-        message: `Couldn't find todo with id: ${id}`,
-      };
-    }
-
-    const updatedTodo = this.todoList.filter((todo) => {
-      return todo.id != numberedId;
-    });
-
-    return updatedTodo;
-  }
-
-  updateSingleToDo(req: Request, res: Response) {
-    const { id } = req.params;
-    const numberedId = Number(id);
-
-    const reqBody = req.body as UpdateToDoDto;
-
-    const todo = this.todoList.find((todo) => {
-      return todo.id === numberedId;
-    });
-
-    if (!todo) {
-      return {
-        message: `couldn't find todo with id: ${id}`,
-      };
-    }
-
-    if (reqBody.comment) {
-      todo.comment = reqBody.comment;
-    }
-
-    if (reqBody.name) {
-      todo.name = reqBody.name;
-    }
-
-    if (reqBody.description) {
-      todo.description = reqBody.description;
-    }
-
-    if (reqBody.isCompleted != undefined) {
-      todo.isCompleted = reqBody.isCompleted;
-    }
-
-    return {
-      message: "Update completed",
-      data: todo,
     };
   }
 }
