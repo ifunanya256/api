@@ -1,3 +1,4 @@
+import { drizzle } from "drizzle-orm/node-postgres";
 import { Pool } from "pg";
 import { env } from "./env";
 
@@ -9,3 +10,5 @@ export async function connectDb() {
 	client.release();
 	console.log("Database connected");
 }
+
+export const db = drizzle(env.DATABASE_URL);

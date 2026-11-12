@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import { UpdateTodoDto } from "../../dto";
+import { CreateTodoDTO, UpdateTodoDto } from "../../dto";
+import { todoTable } from "../../db/schema";
+import { db } from "../../config/db";
 
 // TODO:
 // 1. create a GET method and route to get all the todo list ✅
@@ -39,12 +41,20 @@ export class TodoController {
 		},
 	];
 
-	createTodo(req: Request, _res: Response) {
-		const requestBody = req.body;
+	async createTodo(req: Request, _res: Response) {
+		const requestBody = req.body as CreateTodoDTO;
+
+		const todoInsert: typeof todoTable.$inferInsert = {
+			name: requestBody.name,
+			description: requestBody.description,
+			isCompleted: requestBody.isCompleted,
+		};
+
+		await db.insert(todoTable).values(todoInsert);
 
 		return {
-			message: "completed",
-			todo: requestBody,
+			message: "New todo record created!",
+			data: todoInsert,
 		};
 	}
 
