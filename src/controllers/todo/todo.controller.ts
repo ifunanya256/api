@@ -1,6 +1,6 @@
 import { Request, Response } from "express";
 import { CreateTodoDTO, UpdateTodoDto } from "../../dto";
-import { todoTable } from "../../db/schema";
+import { todoTable } from "../../db/todo.schema";
 import { db } from "../../config/db";
 import { count, eq } from "drizzle-orm";
 
@@ -50,16 +50,54 @@ export class TodoController {
 
 	async getSingleTodo(req: Request, _res: Response) {
 		const { id } = req.params;
-		const numberedId = Number(id);
 
 		const todo = await db
 			.select()
 			.from(todoTable)
-			.where(eq(todoTable.id, numberedId));
+			.where(eq(todoTable.id, id.toString()));
 
 		return {
 			message: `todo for id:${id} retrieved`,
-			data: todo[0]
+			data: todo[0],
+		};
+	}
+
+	async updateSingleTodo(req: Request, _res: Response) {
+		const { id } = req.params;
+
+		const updateBody = req.body as UpdateTodoDto;
+
+		const updatedTodo = await db
+			.update(todoTable)
+			.set({
+				name: updateBody.name,
+				description: updateBody.description,
+				comment: updateBody.comment,
+				isCompleted: updateBody.isCompleted,
+			})
+			.where(eq(todoTable.id, id.toString()))
+			// .returning({
+			// 	id: todoTable.id,
+			// 	name: todoTable.name,
+			// 	description: todoTable.description,
+			// 	comment: todoTable.comment,
+			// 	isCompleted: todoTable.isCompleted,
+			// });
+			.returning();
+
+		return {
+			message: "update was successful",
+			data: updatedTodo[0],
+		};
+	}
+
+	async deleteSingleTodo(req: Request, _res: Response) {
+		const { id } = req.params;
+
+		await db.delete(todoTable).where(eq(todoTable.id, id.toString()));
+
+		return {
+			message: "todo value deleted successfully",
 		};
 	}
 }
