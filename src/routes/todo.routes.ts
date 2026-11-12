@@ -18,12 +18,12 @@ router.get("/", todoController.getAllTodo.bind(todoController));
 
 router.get("/:id", todoController.getSingleTodo.bind(todoController));
 
-router.delete("/:id", todoController.deleteSingleTodo.bind(todoController));
+// router.delete("/:id", todoController.deleteSingleTodo.bind(todoController));
 
-router.patch(
-	"/:id",
-	validateBody(updateTodoDto),
-	todoController.updateSingleTodo.bind(todoController),
-);
+// router.patch(
+// 	"/:id",
+// 	validateBody(updateTodoDto),
+// 	todoController.updateSingleTodo.bind(todoController),
+// );
 
 export default router;
