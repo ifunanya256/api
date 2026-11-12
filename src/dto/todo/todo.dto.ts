@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 export const createTodoDto = z.object({
-  title: z
+  name: z
     .string()
     .min(1, "Title is required")
     .max(255, "Title must not be more than 255 words"),

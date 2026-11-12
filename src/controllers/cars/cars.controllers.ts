@@ -1,5 +1,7 @@
 import { Request, Response } from "express";
-import { UpdateCarsDto, updateCarsDto} from "../../dto/cars/cars.dto"; 
+import { CreateCarsDTO, UpdateCarsDto, updateCarsDto} from "../../dto/cars/cars.dto"; 
+import { carsTable } from "../../db/carsdb/cars.schema";
+import { db } from "../../config/db"; 
 
 interface Cars {
   id: number;
@@ -56,7 +58,25 @@ export class CarsController {
     },
   ];
 
-  createCars(req: Request, res: Response) {}
+ async createCars(req: Request, res: Response) {
+const requestBody = req.body as CreateCarsDTO;
+
+const carsInsert: typeof carsTable.$inferInsert = {
+  brand: requestBody.brand,
+  model: requestBody.model,
+  year: requestBody.year,
+  color: requestBody.color,
+  price: requestBody.price,
+  isAvailable: requestBody.isAvailable,
+  description: requestBody.description,
+}
+
+await db.insert(carsTable).values(carsInsert) 
+return {
+  message: "New car information assigned",
+  data: carsInsert
+}
+ }
 
   getAllCars(req: Request, res: Response) {
     const total = this.carsList.length;

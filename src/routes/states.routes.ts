@@ -16,5 +16,6 @@ router.post(
 
 router.get("/", statesController.getAllStates.bind(statesController))
 router.get("/single/:id", statesController.getSingleState.bind(statesController))
+router.delete("/:id", statesController.deleteSingleState.bind(statesController))
 
 export default router;

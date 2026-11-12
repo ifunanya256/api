@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
-import { UpdateToDoDto } from "../../dto";
+import { CreateTodoDTO, UpdateToDoDto } from "../../dto";
+import { todoTable } from "../../db/schema";
+import { db } from "../../config/db";
+import { todo } from "node:test";
 
 interface Todo {
   id: number;
@@ -33,7 +36,22 @@ export class TodoController {
     },
   ];
 
-  createTodo(req: Request, res: Response) {}
+  async createTodo(req: Request, res: Response) {
+    const requestBody = req.body as CreateTodoDTO;
+
+    const todoInsert: typeof todoTable.$inferInsert = {
+      name: requestBody.name,
+      description: requestBody.description,
+      isCompleted: requestBody.isCompleted,
+    };
+
+    await db.insert(todoTable).values(todoInsert);
+
+    return {
+      message: "New todo record created!!!!",
+      data: todoInsert,
+    };
+  }
 
   getAllToDo(req: Request, res: Response) {
     const total = this.todoList.length;

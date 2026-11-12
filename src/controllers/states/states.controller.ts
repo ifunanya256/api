@@ -1,4 +1,6 @@
 import { Request, Response } from "express";
+import { statesTable } from "../../db/states.schema";
+import { CreateStatesDTO } from "../../dto/states/states.dto";
 
 interface States {
   id: number;
@@ -178,7 +180,20 @@ export class StatesController {
     },
   ];
 
-  createState(req: Request, res: Response) {}
+  async createState(req: Request, res: Response) {
+    const requestBody = req.body as CreateStatesDTO;
+
+    const statesInsert: typeof statesTable.$inferInsert = {
+      name: requestBody.name,
+      capital: requestBody.capital,
+      geopoliticalZone: requestBody.geopoliticalZone,
+    };
+
+    return {
+      message: "You have created a new state",
+      data: statesInsert,
+    };
+  }
 
   getAllStates(req: Request, res: Response) {
     const total = this.statesList.length;
@@ -190,14 +205,29 @@ export class StatesController {
   }
 
   getSingleState(req: Request, res: Response) {
-    const { id } = req.params
-    const numberId = Number(id)
+    const { id } = req.params;
+    const numberId = Number(id);
 
-    const states = this.statesList.filter((states) => states.id === numberId)
+    const states = this.statesList.filter((states) => states.id === numberId);
 
-    return{
-        message: states.length > 0 ? "State Found" : "State Not Found",
-        data: states[0]
+    return {
+      message: states.length > 0 ? "State Found" : "State Not Found",
+      data: states[0],
+    };
+  }
+
+  deleteSingleState(req: Request, res: Response) {
+    const { id } = req.params;
+    const numberedId = Number(id);
+
+    const States = this.statesList.find((states) => {
+      return states.id === numberedId;
+    });
+
+    if (!States) {
+      return {
+        message: `Couldn't find the state with id: ${id}`,
+      };
     }
   }
 }
